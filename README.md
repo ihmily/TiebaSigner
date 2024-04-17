@@ -1,4 +1,5 @@
 # TiebaSigner
+
 百度贴吧一键签到脚本，已稳定运行两年
 
 
@@ -19,19 +20,19 @@ git clone https://github.com/ihmily/TiebaSigner.git
 cd TiebaSigner
 ```
 
-**获取百度贴吧登录后的cookie，将其填入cookie.json文件中。**
-
 
 
 #### 源码运行
 
-1.安装依赖
+1.获取百度贴吧登录后的cookie，将其填入cookie.json文件中。
+
+2.安装依赖
 
 ```
 pip install -r requirements.txt
 ```
 
-2.运行
+3.运行
 
 ```
 python tieba_sign.py
@@ -41,31 +42,57 @@ python tieba_sign.py
 
 #### Docker运行
 
-1.构建镜像，进入项目文件夹并执行
+第一种方式：
+
+1.获取你登录百度账号后的cookie，填入cookie.json文件中
+
+2.构建镜像，进入项目文件夹并执行
 
 ```
 docker build -t tieba-sign .
 ```
 
-2.运行
+3.运行
 
 ```
 docker run tieba-sign
 ```
 
-如果不想自己构建镜像。可以跳过第二步，然后直接拉取我的docker仓库镜像 ，执行
+&emsp;
+
+第二种方式：
+
+1.如果不想自己构建镜像，也可以直接拉取我的docker仓库镜像 ，执行
 
 ```
 docker pull ihmily/tieba-sign:latest
 ```
 
-最后运行
+2.修改cookie.json文件，填入你登录百度账号后的cookie
+
+3.然后运行
 
 ```
-docker run ihmily/tieba-sign:latest
+docker run -v /path/to/cookie.json:/app/cookie.json ihmily/tieba-sign:latest
 ```
 
+其中 `/path/to/cookie.json` 替换为你服务器上cookie.json文件的正确路径（**注意需要绝对路径**）
 
+第一次执行成功后，使用下面命令查询刚创建的容器ID或者容器名
+
+```
+docker ps -a
+```
+
+之后运行脚本都使用下面的命令
+
+```
+docker start -a 容器ID或者容器名称
+```
+
+如果每次使用`docker run` 执行，每次都会创建新的容器，占用额外的空间。
+
+&emsp;
 
 #### 定时运行
 
@@ -78,13 +105,17 @@ crontab -e
 
 2.然后在编辑器中添加一行类似于下面的内容，以在每天的固定时间执行签到脚本：
 
+如果有python环境并且使用源码能正常运行，则填写
+
 ```
 0 8 * * * python3 /path/to/tieba_sign.py
 ```
 
-在这个示例中，`0 8 * * *` 表示在每天的上午8点执行，`/app/tieba_sign.py` 是签到脚本在容器中的路径。
+在这个示例中，`0 8 * * *` 表示在每天的上午8点执行，`/path/to/tieba_sign.py` 是签到脚本在服务器中的路径。
 
-3.如果使用的是docker运行，则执行
+&emsp;
+
+如果使用的是docker运行，那么应该填写下面内容
 
 ```
 0 8 * * * docker start -a <container_id_or_name>
@@ -95,4 +126,3 @@ crontab -e
 设置完毕后，保存并退出编辑器，定时任务将会生效。每天的指定时间，该定时任务都会自动执行容器中的签到脚本。
 
 ***
-
