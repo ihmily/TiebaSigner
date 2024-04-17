@@ -5,21 +5,33 @@
 
 ## 使用说明
 
-#### 源码运行
+#### 拉取代码
 
-1.进入项目文件夹
+使用命令或者手动下载仓库代码
+
+```
+git clone https://github.com/ihmily/TiebaSigner.git
+```
+
+进入项目文件夹
 
 ```
 cd TiebaSigner
 ```
 
-2.安装依赖
+**获取百度贴吧登录后的cookie，将其填入cookie.json文件中。**
+
+
+
+#### 源码运行
+
+1.安装依赖
 
 ```
 pip install -r requirements.txt
 ```
 
-3.运行
+2.运行
 
 ```
 python tieba_sign.py
@@ -29,19 +41,13 @@ python tieba_sign.py
 
 #### Docker运行
 
-1.进入项目文件夹
-
-```
-cd TiebaSigner
-```
-
-2.构建镜像
+1.构建镜像，进入项目文件夹并执行
 
 ```
 docker build -t tieba-sign .
 ```
 
-3.运行
+2.运行
 
 ```
 docker run tieba-sign
