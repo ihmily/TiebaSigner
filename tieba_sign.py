@@ -31,9 +31,13 @@ class TiebaSigner:
     async def get_like_list(self):
         logger.info("开始获取账号关注的贴吧列表")
         url = "https://tieba.baidu.com/f/like/mylike"
-        html_str = await self.fetch_url(url)
-        pn_list = re.findall('<a href="/f/like/mylike\?&pn=(.*?)\">', html_str, re.S)
-        page_num = pn_list[-1]
+        try:
+            html_str = await self.fetch_url(url)
+            pn_list = re.findall('<a href="/f/like/mylike\?&pn=(.*?)\">', html_str, re.S)
+            page_num = pn_list[-1]
+        except IndexError:
+            logger.error("cookie为空或者已过期，请在cookie.json文件中填写正确的cookie后重试")
+            return
         tasks = []
         for i in range(1, int(page_num) + 1):
             page_url = f"https://tieba.baidu.com/f/like/mylike?&pn={i}"
