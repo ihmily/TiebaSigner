@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 import json
+import os
 import re
 import sys
 
@@ -8,9 +9,11 @@ import httpx
 from bs4 import BeautifulSoup
 from loguru import logger
 
+script_path = os.path.split(os.path.realpath(sys.argv[0]))[0]
+
 
 def load_cookie_from_config():
-    with open('cookie.json', 'r') as f:
+    with open(f'{script_path}/cookie.json', 'r') as f:
         content = f.read()
         return json.loads(content)['baidu_cookie']
 
@@ -33,7 +36,7 @@ class TiebaSigner:
         url = "https://tieba.baidu.com/f/like/mylike"
         try:
             html_str = await self.fetch_url(url)
-            pn_list = re.findall('<a href="/f/like/mylike\?&pn=(.*?)\">', html_str, re.S)
+            pn_list = re.findall(r'<a href="/f/like/mylike\?&pn=(.*?)\">', html_str, re.S)
             page_num = pn_list[-1]
         except IndexError:
             logger.error("cookie为空或者已过期，请在cookie.json文件中填写正确的cookie后重试")
